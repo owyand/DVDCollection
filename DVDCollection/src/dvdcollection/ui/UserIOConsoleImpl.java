@@ -1,71 +1,121 @@
 package dvdcollection.ui;
 
+import java.util.Scanner;
+
+//implementing the same as in ClassRosterApp
 public class UserIOConsoleImpl implements UserIO{
 
+	final private Scanner console = new Scanner(System.in);
+
+	//shortcut for writing to console
 	@Override
 	public void print(String msg) {
-		System.out.println(msg);
+		System.out.println(msg);	
+	}
+
+	@Override
+	public double readDouble(String msgPrompt) {
+		while (true) {
+			try {
+				return Double.parseDouble(this.readString(msgPrompt));
+			} catch (NumberFormatException e) {
+				this.print("Input error. Please try again.");
+			}
+		}
+	}
+
+	@Override
+	public double readDouble(String msgPrompt, double min, double max) {
+		double result;
+		do {
+			result = readDouble(msgPrompt);
+		} while (result < min || result > max);
 		
+		return result;
 	}
 
 	@Override
-	public double readDouble(String prompt) {
-		// TODO Auto-generated method stub
-		return 0;
+	public float readFloat(String msgPrompt) {
+		while (true) {
+			try {
+				return Float.parseFloat(this.readString(msgPrompt));
+			} catch (NumberFormatException e) {
+				this.print("Input error. Please try again.");
+			}
+		}
 	}
 
 	@Override
-	public double readDouble(String prompt, double min, double max) {
-		// TODO Auto-generated method stub
-		return 0;
+	public float readFloat(String msgPrompt, float min, float max) {
+		float result;
+		do {
+			result = readFloat(msgPrompt);
+		} while (result < min || result > max);
+		
+		return result;
 	}
 
 	@Override
-	public float readFloat(String prompt) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int readInt(String msgPrompt) {
+		boolean invalidInput = true;
+		int num = 0;
+		while (invalidInput) {
+			try {
+				//print msg 
+				String stringValue = this.readString(msgPrompt);
+				//get input line and try to parse
+				num = Integer.parseInt(stringValue);
+				
+				invalidInput = false;
+			} catch (NumberFormatException e) {
+				//if it explodes
+				this.print("Input error. Please try again");
+			}
+		}
+		return num;
 	}
 
 	@Override
-	public float readFloat(String prompt, float min, float max) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int readInt(String msgPrompt, int min, int max) {
+		int result;
+		do {
+			result = readInt(msgPrompt);
+		} while (result < min || result > max);
+		
+		return result;
 	}
 
 	@Override
-	public int readInt(String prompt) {
-		// TODO Auto-generated method stub
-		return 0;
+	public long readLong(String msgPrompt) {
+		while (true) {
+			try {
+				//return is in the try and the while will break once it executes
+				return Long.parseLong(this.readString(msgPrompt));
+			} catch (NumberFormatException e) {
+				this.print("Input error. Please try again.");
+			}
+		}
 	}
 
 	@Override
-	public int readInt(String prompt, int min, int max) {
-		// TODO Auto-generated method stub
-		return 0;
+	public long readLong(String msgPrompt, long min, long max) {
+		long result;
+		do {
+			result = readLong(msgPrompt);
+		} while (result < min || result > max);
+		
+		return result;
 	}
 
 	@Override
-	public long readLong(String prompt) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public long readLong(String prompt, long min, long max) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String readString(String prompt) {
-		// TODO Auto-generated method stub
-		return null;
+	public String readString(String msgPrompt) {
+		System.out.println(msgPrompt);
+		return console.nextLine();
 	}
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		
+		this.console.close();
 	}
 
 }

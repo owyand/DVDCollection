@@ -3,6 +3,13 @@
  */
 package dvdcollection;
 
+import dvdcollection.controller.DVDCollectionController;
+import dvdcollection.dao.DVDCollectionDao;
+import dvdcollection.dao.DVDCollectionDaoFileImpl;
+import dvdcollection.ui.DVDCollectionView;
+import dvdcollection.ui.UserIO;
+import dvdcollection.ui.UserIOConsoleImpl;
+
 /**
  * @author Oliver Wyand
  *
@@ -13,13 +20,13 @@ public class App {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		/*
-		 * TODO: create a DVDCollectionController Object and call run();
-		 */
-		/*
-		 * TODO: eventually implement the IO and DAO implementations used in this app to
-		 * pass through to the DVDCollectionController constructor
-		 */
+
+		UserIO AppIo = new UserIOConsoleImpl();
+		DVDCollectionView AppView = new DVDCollectionView(AppIo);
+		DVDCollectionDao AppDao = new DVDCollectionDaoFileImpl();
+		
+		DVDCollectionController controller = new DVDCollectionController(AppView, AppDao);
+		controller.run();
 
 	}
 
