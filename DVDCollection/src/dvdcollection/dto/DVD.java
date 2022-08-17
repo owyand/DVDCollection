@@ -19,6 +19,9 @@ public class DVD {
 	/* TODO:
 	 * set getter/setter for each field
 	 */
+	public String getTitle() {
+		return title;
+	}
 	
 	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
