@@ -15,7 +15,7 @@ public class DVDCollectionView {
 	}
 
 	public int displayMenuAndGetChoice() {
-		// 1. print menu
+		// print menu using the IO
 		io.print("*Menu*");
 		io.print("1. add DVD");
 		io.print("2. remove DVD");
@@ -23,22 +23,25 @@ public class DVDCollectionView {
 		io.print("4. list DVD collection");
 		io.print("5. display DVD information");
 		io.print("6. Exit");
-		
-		// 2. ask for input
-		// 3. read input
-		// 4. return to the caller
+
+		// call to User IO to parse and make sense of the user input, returns a number
+		// between 1 and 6
 		return io.readInt("Enter your choice: ", 1, 6);
 	}
 	
+	/*TODO:
+	 * create unique success banners and displays for each user story
+	 */
+
 	public void addDVDBanner() {
 		io.print("=== ADD DVD ===");
 	}
+
 	public DVD addDVD() {
 		String title = io.readString("Enter the DVD title: ");
-		//search the map if it already exists
 
 		DVD createdDVD = new DVD(title);
-		
+
 		String releaseDate = io.readString("Enter the DVD release Date: ");
 		createdDVD.setReleaseDate(releaseDate);
 		String studio = io.readString("Enter the DVD studio: ");
@@ -49,7 +52,7 @@ public class DVDCollectionView {
 		createdDVD.setMpaa(mpaaRating);
 		String userReview = io.readString("Enter any personal note or review on the DVD: ");
 		createdDVD.setUserReview(userReview);
-		
+
 		return createdDVD;
 	}
 
@@ -109,7 +112,6 @@ public class DVDCollectionView {
 	}
 
 	public String getDirectorName() {
-		// TODO Auto-generated method stub
 		return io.readString("Enter the director's name: ");
 	}
 
@@ -144,7 +146,7 @@ public class DVDCollectionView {
 	}
 
 	public void displayDVDInfo(DVD theDVD) {
-		
+
 		io.print("Title: " + theDVD.getTitle());
 		io.print("Release Date: " + theDVD.getReleaseDate());
 		io.print("Studio :" + theDVD.getStudio());
@@ -152,11 +154,5 @@ public class DVDCollectionView {
 		io.print("MPAA Rating: " + theDVD.getMpaa());
 		io.print("User Review: " + theDVD.getUserReview());
 	}
-
-	
-	/*
-	 * TODO: create banners and anything that is displayed to the console print
-	 * using io interface which will user whatever impl is initialized
-	 */
 
 }

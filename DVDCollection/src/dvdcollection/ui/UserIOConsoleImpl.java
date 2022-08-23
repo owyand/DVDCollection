@@ -5,6 +5,7 @@ import java.util.Scanner;
 //implementing the same as in ClassRosterApp
 public class UserIOConsoleImpl implements UserIO{
 
+	//new scanner is declared that reads the console "ConsoleImpl"
 	final private Scanner console = new Scanner(System.in);
 
 	//shortcut for writing to console
@@ -113,6 +114,7 @@ public class UserIOConsoleImpl implements UserIO{
 		return console.nextLine();
 	}
 
+	//close the scanner from another class
 	@Override
 	public void close() {
 		this.console.close();
