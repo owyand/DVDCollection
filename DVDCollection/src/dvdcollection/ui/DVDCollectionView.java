@@ -1,11 +1,15 @@
 package dvdcollection.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import dvdcollection.dto.DVD;
 
 public class DVDCollectionView {
 
+	private final List<String> MPAARATINGS = new ArrayList<String>(Arrays.asList("G", "PG", "PG13", "R", "NC17"));
+	
 	// set the interface to private and use a constructor that will determine the
 	// type of implementation being used in the program (e.g. fileImpl)
 	private UserIO io;
@@ -28,10 +32,6 @@ public class DVDCollectionView {
 		// between 1 and 6
 		return io.readInt("Enter your choice: ", 1, 6);
 	}
-	
-	/*TODO:
-	 * create unique success banners and displays for each user story
-	 */
 
 	public void addDVDBanner() {
 		io.print("=== ADD DVD ===");
@@ -48,12 +48,58 @@ public class DVDCollectionView {
 		createdDVD.setStudio(studio);
 		String directorName = io.readString("Enter the DVD director's name: ");
 		createdDVD.setDirectorName(directorName);
+		//tell the user what is accepted
+		mpaaRatings();
 		String mpaaRating = io.readString("Enter the DVD MPAA rating: ");
 		createdDVD.setMpaa(mpaaRating);
 		String userReview = io.readString("Enter any personal note or review on the DVD: ");
 		createdDVD.setUserReview(userReview);
 
 		return createdDVD;
+	}
+	
+	public void addDVDSuccessfulBanner(String title) {
+		successfulBanner();
+		io.print(title + " was successfully added to DVD Collection");
+	}
+	
+	public void editUserNoteSuccessfulBanner() {
+		successfulBanner();
+		io.print("User's Review was updated.");
+	}
+	
+	public void editMpaaRatingSuccessfulBanner() {
+		successfulBanner();
+		io.print("MPAA Rating was updated.");
+	}
+	
+	public void editDirectorNameSuccessfulBanner() {
+		successfulBanner();
+		io.print("Director's name was updated.");
+	}
+	
+	public void editStudioSuccessfulBanner() {
+		successfulBanner();
+		io.print("Studio was updated.");
+	}
+	
+	public void editReleaseDateSuccessfulBanner() {
+		successfulBanner();
+		io.print("Release Date was updated.");
+	}
+	
+	public void editTitleSuccessfulBanner(String oldTitle, String newTitle) {
+		successfulBanner();
+		io.print(oldTitle + " was updated to " + newTitle);
+	}
+
+	private void mpaaRatings() {
+		
+		io.print("Accepted MPAA Ratings");
+		for (String rating : MPAARATINGS) {
+			io.print(rating);
+		}
+		io.print("======");
 	}
 
 	public void successfulBanner() {

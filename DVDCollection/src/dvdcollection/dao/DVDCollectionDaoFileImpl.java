@@ -25,7 +25,7 @@ public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 	}
 
 	@Override
-	public DVD addDVD(String DVDTitle, DVD newDVD) throws FileNotFoundException, IOException {
+	public DVD addDVD(String DVDTitle, DVD newDVD) throws FilePersistenceException {
 		loadCollection();
 		DVD addedDVD = DVDCollection.put(DVDTitle, newDVD);
 		writeCollection();
@@ -33,7 +33,7 @@ public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 	}
 
 	@Override
-	public DVD removeDVD(String DVDTitle) throws FileNotFoundException, IOException {
+	public DVD removeDVD(String DVDTitle) throws FilePersistenceException {
 		loadCollection();
 		DVD oldDVD = DVDCollection.remove(DVDTitle);
 		writeCollection();
@@ -41,7 +41,7 @@ public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 	}
 
 	@Override
-	public DVD editDVDTitle(String oldTitle, String newTitle) throws FileNotFoundException, IOException{
+	public DVD editDVDTitle(String oldTitle, String newTitle) throws FilePersistenceException {
 		loadCollection();
 		
 		//get old and new DVD objects
@@ -63,56 +63,56 @@ public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 	}
 
 	@Override
-	public DVD editReleaseDate(String title, String newReleaseDate) throws FileNotFoundException, IOException {
+	public DVD editReleaseDate(String title, String newReleaseDate) throws FilePersistenceException {
 		DVD theDVD = getDVD(title);
 		theDVD.setReleaseDate(newReleaseDate);
 		return theDVD;
 	}
 
 	@Override
-	public DVD editStudio(String title, String newStudio) throws FileNotFoundException, IOException{
+	public DVD editStudio(String title, String newStudio) throws FilePersistenceException {
 		DVD theDVD = getDVD(title);
 		theDVD.setStudio(newStudio);
 		return theDVD;
 	}
 
 	@Override
-	public DVD editDirectorName(String title, String newDirectorName) throws FileNotFoundException, IOException {
+	public DVD editDirectorName(String title, String newDirectorName) throws FilePersistenceException {
 		DVD theDVD = getDVD(title);
 		theDVD.setDirectorName(newDirectorName);
 		return theDVD;
 	}
 
 	@Override
-	public DVD editMpaaRating(String title, String newMpaaRating) throws FileNotFoundException, IOException {
+	public DVD editMpaaRating(String title, String newMpaaRating) throws FilePersistenceException {
 		DVD theDVD = getDVD(title);
 		theDVD.setMpaa(newMpaaRating);
 		return theDVD;
 	}
 
 	@Override
-	public DVD editUserNote(String title, String newUserNote) throws FileNotFoundException, IOException{
+	public DVD editUserNote(String title, String newUserNote) throws FilePersistenceException {
 		DVD theDVD = getDVD(title);
 		theDVD.setUserReview(newUserNote);
 		return theDVD;
 	}
 
 	@Override
-	public ArrayList<DVD> getCollection() throws FileNotFoundException, IOException {
+	public ArrayList<DVD> getCollection() throws FilePersistenceException {
 		loadCollection();
 		ArrayList<DVD> DVDCollectionArrayList = new ArrayList<DVD>(DVDCollection.values());
 		writeCollection();
 		return DVDCollectionArrayList;
 	}
 
-	public DVD getDVD(String title) throws FileNotFoundException, IOException {
+	public DVD getDVD(String title) throws FilePersistenceException {
 		loadCollection();
 		DVD theDVD = DVDCollection.get(title);
 		writeCollection();
 		return theDVD;
 	}
 
-	private void loadCollection() throws FileNotFoundException {
+	private void loadCollection() throws FilePersistenceException {
 		Scanner fromCollection = null;
 
 		try {
@@ -153,7 +153,7 @@ public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 		return theDVD;
 	}
 
-	private void writeCollection() throws IOException {
+	private void writeCollection() throws FilePersistenceException {
 		// write to the file
 		PrintWriter toFile = null;
 

@@ -5,18 +5,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import dvdcollection.dao.DVDCollectionDao;
+import dvdcollection.dao.FilePersistenceException;
 import dvdcollection.dto.DVD;
+import dvdcollection.service.DVDDoesNotExistException;
+import dvdcollection.service.DVDAlreadyExistsException;
+import dvdcollection.service.DVDCollectionServiceLayer;
+import dvdcollection.service.DVDCollectionServiceLayerImpl;
+import dvdcollection.service.InvalidDVDMpaaRatingException;
+import dvdcollection.service.InvalidDVDTitleException;
 import dvdcollection.ui.DVDCollectionView;
 
 public class DVDCollectionController {
 
-	private DVDCollectionDao dao;
+	private DVDCollectionServiceLayer service;
 	private DVDCollectionView view;
 
 	// constructor which sets the specified implementations of DAO and View passed
 	// through the App
-	public DVDCollectionController(DVDCollectionView view, DVDCollectionDao dao) {
-		this.dao = dao;
+	public DVDCollectionController(DVDCollectionView view, DVDCollectionServiceLayer service) {
+		this.service = service;
 		this.view = view;
 	}
 
@@ -51,19 +58,19 @@ public class DVDCollectionController {
 					menu = false;
 					break;
 				default:
+					//idk if i need this
 				}
 
 			}
-		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: create a nice error here to throw nicely");
-			/*
-			 * TODO: create a class Exception
-			 */
-		} catch (IOException e) {
-			System.out.println("ERROR: create a nice error here to throw nicely");
-			/*
-			 * TODO: create a class Exception
-			 */
+		} catch (FilePersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DVDAlreadyExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DVDDoesNotExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -73,151 +80,156 @@ public class DVDCollectionController {
 		return view.displayMenuAndGetChoice();
 	}
 
-	private void addDVD() throws FileNotFoundException, IOException {
-		view.addDVDBanner();
-		DVD newDVD = view.addDVD();
-		dao.addDVD(newDVD.getTitle(), newDVD);
-		view.successfulBanner();
+	private void addDVD() throws FilePersistenceException, DVDAlreadyExistsException {
+
+		boolean tryAgain = false;
+		do {
+			view.addDVDBanner();
+			DVD newDVD = view.addDVD();
+
+			// try catch here in case an invalid entry is given so that we can re-prompt
+			// instead of throwing all the way to main menu
+			try {
+				service.addDVD(newDVD.getTitle(), newDVD);
+				view.successfulBanner();
+			} catch (InvalidDVDTitleException e) {
+				/*
+				 * TODO: make a catch call to view here
+				 */
+				tryAgain = true;
+			} catch (InvalidDVDMpaaRatingException e) {
+				/*
+				 * TODO: make a catch call to view here
+				 */
+				tryAgain = true;
+			}
+		} while (tryAgain);
 	}
 
-	private void removeDVD() throws FileNotFoundException, IOException {
+	private void removeDVD() throws FilePersistenceException, DVDDoesNotExistException {
 		view.removeDVDBanner();
 		String title = view.getDVDTitle();
-		DVD oldDVD = dao.removeDVD(title);
-		view.successfulBanner();
-		System.out.println(oldDVD.getTitle() + "was removed");
-		/*
-		 * TODO: refactor to display through view
-		 */
+		service.removeDVD(title);
+		view.addDVDSuccessfulBanner(title);
+
 	}
 
-	private void displayDVDInfo() throws FileNotFoundException, IOException {
+	private void displayDVDInfo() throws FilePersistenceException, DVDDoesNotExistException {
 		view.displayDVDInfoBanner();
 		String title = view.getDVDTitle();
-		view.displayDVDInfo(dao.getDVD(title));
+		view.displayDVDInfo(service.displayDVDInfo(title));
 		view.successfulBanner();
-		// no need to display anything else besides successful banner
 	}
 
-	private void listDVDCollection() throws FileNotFoundException, IOException {
+	private void listDVDCollection() throws FilePersistenceException {
 		view.listDVDCollectionBanner();
-		ArrayList<DVD> DVDs = dao.getCollection();
+		ArrayList<DVD> DVDs = service.listDVDCollection();
 		view.listDVDCollection(DVDs);
 		view.successfulBanner();
 	}
 
-	private void editDVD() {
+	private void editDVD() throws FilePersistenceException{
 		view.editDVDBanner();
 		String title = view.getDVDTitle();
+
 		boolean editMenu = true;
-		try {
-			while (editMenu) {
-				int choice = displayEditMenuAndGetChoice();
+		
+		while (editMenu) {
+			int choice = displayEditMenuAndGetChoice();
 
-				switch (choice) {
-				case 1:
-					editTitle(title);
-					break;
-				case 2:
-					editReleaseDate(title);
-					break;
-				case 3:
-					editStudio(title);
-					break;
-				case 4:
-					editDirectorName(title);
-					break;
-				case 5:
-					editMpaaRating(title);
-					break;
-				case 6:
-					editUserNote(title);
-					break;
-				case 7:
-					editMenu = false;
-				default:
-				}
-
+			switch (choice) {
+			case 1:
+				editTitle(title);
+				break;
+			case 2:
+				editReleaseDate(title);
+				break;
+			case 3:
+				editStudio(title);
+				break;
+			case 4:
+				editDirectorName(title);
+				break;
+			case 5:
+				editMpaaRating(title);
+				break;
+			case 6:
+				editUserNote(title);
+				break;
+			case 7:
+				editMenu = false;
+			default:
+				
 			}
-			// i think catching here would be correct so that we can loop this sub-menu even
-			// though they are the same exceptions
-		} catch (NumberFormatException e) {
-			System.out.println("ERROR");
-			/*
-			 * TODO: create an exception class so it throws nicely
-			 */
-		} catch (IOException e) {
-			System.out.println("ERROR");
-			/*
-			 * TODO: create an exception class so it throws nicely
-			 */
+
 		}
+
 	}
 
-	private void editUserNote(String title) throws FileNotFoundException, IOException {
+	private void editUserNote(String title) throws FilePersistenceException {
 		view.editUserNoteBanner();
 		String newUserNote = view.getUserNote();
-		DVD theDVD = dao.editUserNote(title, newUserNote);
-		view.successfulBanner();
-		System.out.println(theDVD.getTitle() + "'s User Note was changed to " + theDVD.getUserReview());
-		/*TODO:
-		 * refactor so that this uses the view
-		 */
+		service.editUserReview(title, newUserNote);
+		view.editUserNoteSuccessfulBanner();
 	}
 
-	private void editMpaaRating(String title) throws FileNotFoundException, IOException {
-		view.editMpaaRatingBanner();
-		String newMpaaRating = view.getMpaaRating();
-		DVD theDVD = dao.editMpaaRating(title, newMpaaRating);
-		view.successfulBanner();
-		System.out.println(theDVD.getTitle() + "'s MPAA Rating was changed to " + theDVD.getMpaa());
-		/*TODO:
-		 * refactor so that this uses the view
-		 */
+	private void editMpaaRating(String title) throws FilePersistenceException{
+		boolean tryAgain = false;
+		
+		//loop if input was invalid
+		do {
+			view.editMpaaRatingBanner();
+			String newMpaaRating = view.getMpaaRating();
+			try {
+				service.editMpaaRating(title, newMpaaRating);
+				view.editMpaaRatingSuccessfulBanner();
+			} catch (InvalidDVDMpaaRatingException e){
+				/*TODO:
+				 * create a nice message here
+				 */
+			}
+		} while (tryAgain);
 	}
 
-	private void editDirectorName(String title) throws FileNotFoundException, IOException{
+	private void editDirectorName(String title) throws FilePersistenceException {
 		view.editDirectorNameBanner();
 		String newDirectorName = view.getDirectorName();
-		DVD theDVD = dao.editDirectorName(title, newDirectorName);
-		view.successfulBanner();
-		System.out.println(theDVD.getTitle() + "'s Director was changed to " + theDVD.getDirectorName());
-		/*TODO:
-		 * refactor so that this uses the view
-		 */
+		service.editDirectorName(title, newDirectorName);
+		view.editDirectorNameSuccessfulBanner();
 	}
 
-	private void editStudio(String title) throws FileNotFoundException, IOException{
+	private void editStudio(String title) throws FilePersistenceException {
 		view.editStudioBanner();
 		String newStudio = view.getStudio();
-		DVD theDVD = dao.editStudio(title, newStudio);
-		view.successfulBanner();
-		System.out.println(theDVD.getTitle() + "'s Studio was changed to " + theDVD.getStudio());
-		/*TODO:
-		 * refactor so that this uses the view
-		 */
+		service.editStudio(title, newStudio);
+		view.editStudioSuccessfulBanner();
 	}
 
-	private void editReleaseDate(String title) throws FileNotFoundException, IOException {
+	private void editReleaseDate(String title) throws FilePersistenceException {
 		view.editReleaseDateBanner();
 		String newReleaseDate = view.getReleaseDate();
-		DVD theDVD = dao.editReleaseDate(title, newReleaseDate);
-		view.successfulBanner();
-		System.out.println(theDVD.getTitle() + "'s Release Date was changed to " + theDVD.getReleaseDate());
-		/*TODO:
-		 * refactor so that this uses the view
-		 */
+		service.editReleaseDate(title, newReleaseDate);
+		view.editReleaseDateSuccessfulBanner();
 	}
 
-	private void editTitle(String oldTitle) throws FileNotFoundException, IOException {
-		view.editTitleBanner();
-		String newTitle = view.getDVDTitle();
-		DVD theDVD = dao.editDVDTitle(oldTitle, newTitle);
-		view.successfulBanner();
-		System.out.println(oldTitle + " was changed to " + theDVD.getTitle());
-		/*
-		 * TODO: refactor to use the view
-		 */
+	private void editTitle(String oldTitle) throws FilePersistenceException {
+		boolean tryAgain = false;
+		
+		//loop if input is invalid
+		do {
+			view.editTitleBanner();
+			String newTitle = view.getDVDTitle();
+			try {
+				service.editTitle(oldTitle, newTitle);
+				view.editTitleSuccessfulBanner(oldTitle, newTitle);
+			} catch (InvalidDVDTitleException e) {
+				/*TODO:
+				 * create a nice message here error here
+				 */
+				tryAgain = true;
+			}
+		}while (tryAgain);
+
 	}
 
 	private int displayEditMenuAndGetChoice() {
