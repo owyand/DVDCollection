@@ -4,6 +4,8 @@
 package dvdcollection.service;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import dvdcollection.dao.FilePersistenceException;
 
 import dvdcollection.dto.DVD;
@@ -47,4 +49,6 @@ public interface DVDCollectionServiceLayer {
 	//simply gets the DVD object
 	//checks against existence
 	DVD displayDVDInfo(String title)throws FilePersistenceException, DVDDoesNotExistException;
+
+	List<String> getMpaaRatings();
 }

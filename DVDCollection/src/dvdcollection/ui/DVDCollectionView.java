@@ -1,15 +1,12 @@
 package dvdcollection.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import dvdcollection.dto.DVD;
 
 public class DVDCollectionView {
 
-	private final List<String> MPAARATINGS = new ArrayList<String>(Arrays.asList("G", "PG", "PG13", "R", "NC17"));
-	
 	// set the interface to private and use a constructor that will determine the
 	// type of implementation being used in the program (e.g. fileImpl)
 	private UserIO io;
@@ -48,8 +45,8 @@ public class DVDCollectionView {
 		createdDVD.setStudio(studio);
 		String directorName = io.readString("Enter the DVD director's name: ");
 		createdDVD.setDirectorName(directorName);
-		//tell the user what is accepted
-		mpaaRatings();
+		// the user is told what is accepted before the addDVD method is called so that
+		// the List of accepted MPAAs can be called and passed through
 		String mpaaRating = io.readString("Enter the DVD MPAA rating: ");
 		createdDVD.setMpaa(mpaaRating);
 		String userReview = io.readString("Enter any personal note or review on the DVD: ");
@@ -57,49 +54,40 @@ public class DVDCollectionView {
 
 		return createdDVD;
 	}
-	
+
 	public void addDVDSuccessfulBanner(String title) {
 		successfulBanner();
 		io.print(title + " was successfully added to DVD Collection");
 	}
-	
+
 	public void editUserNoteSuccessfulBanner() {
 		successfulBanner();
 		io.print("User's Review was updated.");
 	}
-	
+
 	public void editMpaaRatingSuccessfulBanner() {
 		successfulBanner();
 		io.print("MPAA Rating was updated.");
 	}
-	
+
 	public void editDirectorNameSuccessfulBanner() {
 		successfulBanner();
 		io.print("Director's name was updated.");
 	}
-	
+
 	public void editStudioSuccessfulBanner() {
 		successfulBanner();
 		io.print("Studio was updated.");
 	}
-	
+
 	public void editReleaseDateSuccessfulBanner() {
 		successfulBanner();
 		io.print("Release Date was updated.");
 	}
-	
+
 	public void editTitleSuccessfulBanner(String oldTitle, String newTitle) {
 		successfulBanner();
 		io.print(oldTitle + " was updated to " + newTitle);
-	}
-
-	private void mpaaRatings() {
-		
-		io.print("Accepted MPAA Ratings");
-		for (String rating : MPAARATINGS) {
-			io.print(rating);
-		}
-		io.print("======");
 	}
 
 	public void successfulBanner() {
@@ -199,6 +187,18 @@ public class DVDCollectionView {
 		io.print("Director: " + theDVD.getDirectorName());
 		io.print("MPAA Rating: " + theDVD.getMpaa());
 		io.print("User Review: " + theDVD.getUserReview());
+	}
+
+	public void errorMessage(String msg) {
+		io.print(msg);
+	}
+
+	public void displayMpaaRatings(List<String> ratings) {
+		io.print("Accepted MPAA Ratings");
+		for (String rating : ratings) {
+			io.print(rating);
+		}
+		io.print("======");
 	}
 
 }

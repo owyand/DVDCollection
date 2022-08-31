@@ -17,10 +17,7 @@ public class DVD {
 		this.title = title;
 		
 	}
-	
-	/* TODO:
-	 * set getter/setter for each field
-	 */
+
 	public String getTitle() {
 		return title;
 	}

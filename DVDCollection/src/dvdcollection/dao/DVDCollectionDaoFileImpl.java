@@ -131,10 +131,7 @@ public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 				DVDCollection.put(currentDVD.getTitle(), currentDVD);
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println("create nice error here");
-			/*
-			 * TODO: create a new class of error so that it throws nicely
-			 */
+			throw new FilePersistenceException("Cannot find the file", e);
 		} finally {
 			// closes the scanner if it opened
 			if (fromCollection != null) {
@@ -179,9 +176,7 @@ public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 
 		} catch (IOException e) {
 			System.out.println("ERROR: create a nice error here");
-			/*TODO:
-			 * create a nice error here that calls special class to throw nicely
-			 */
+			throw new FilePersistenceException("Issue with writing to a file", e);
 		} finally {
 			if (toFile != null) {
 				toFile.close();

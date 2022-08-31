@@ -1,16 +1,13 @@
 package dvdcollection.controller;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-import dvdcollection.dao.DVDCollectionDao;
 import dvdcollection.dao.FilePersistenceException;
 import dvdcollection.dto.DVD;
 import dvdcollection.service.DVDDoesNotExistException;
 import dvdcollection.service.DVDAlreadyExistsException;
 import dvdcollection.service.DVDCollectionServiceLayer;
-import dvdcollection.service.DVDCollectionServiceLayerImpl;
 import dvdcollection.service.InvalidDVDMpaaRatingException;
 import dvdcollection.service.InvalidDVDTitleException;
 import dvdcollection.ui.DVDCollectionView;
@@ -63,14 +60,11 @@ public class DVDCollectionController {
 
 			}
 		} catch (FilePersistenceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			view.errorMessage("Issue with persisting to a file");
 		} catch (DVDAlreadyExistsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			view.errorMessage("A DVD with this Title already exists");
 		} catch (DVDDoesNotExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			view.errorMessage("A DVD with this Title does not exist in collection");
 		}
 
 	}
@@ -85,6 +79,8 @@ public class DVDCollectionController {
 		boolean tryAgain = false;
 		do {
 			view.addDVDBanner();
+			List<String> ratings = service.getMpaaRatings();
+			view.displayMpaaRatings(ratings);
 			DVD newDVD = view.addDVD();
 
 			// try catch here in case an invalid entry is given so that we can re-prompt
@@ -93,14 +89,10 @@ public class DVDCollectionController {
 				service.addDVD(newDVD.getTitle(), newDVD);
 				view.successfulBanner();
 			} catch (InvalidDVDTitleException e) {
-				/*
-				 * TODO: make a catch call to view here
-				 */
+				view.errorMessage("The DVD Title cannot be empty or whitespace");
 				tryAgain = true;
 			} catch (InvalidDVDMpaaRatingException e) {
-				/*
-				 * TODO: make a catch call to view here
-				 */
+				view.errorMessage("The MPAA Rating must be an accepted rating");
 				tryAgain = true;
 			}
 		} while (tryAgain);
@@ -179,14 +171,15 @@ public class DVDCollectionController {
 		//loop if input was invalid
 		do {
 			view.editMpaaRatingBanner();
+			List<String> ratings = service.getMpaaRatings();
+			view.displayMpaaRatings(ratings);
 			String newMpaaRating = view.getMpaaRating();
 			try {
 				service.editMpaaRating(title, newMpaaRating);
 				view.editMpaaRatingSuccessfulBanner();
 			} catch (InvalidDVDMpaaRatingException e){
-				/*TODO:
-				 * create a nice message here
-				 */
+				view.errorMessage("The MPAA Rating must be an accepted rating");
+				tryAgain = true;
 			}
 		} while (tryAgain);
 	}
@@ -223,9 +216,7 @@ public class DVDCollectionController {
 				service.editTitle(oldTitle, newTitle);
 				view.editTitleSuccessfulBanner(oldTitle, newTitle);
 			} catch (InvalidDVDTitleException e) {
-				/*TODO:
-				 * create a nice message here error here
-				 */
+				view.errorMessage("The Title cannot be empty or whitespace");
 				tryAgain = true;
 			}
 		}while (tryAgain);

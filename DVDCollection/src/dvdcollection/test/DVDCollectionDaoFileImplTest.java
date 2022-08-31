@@ -20,6 +20,7 @@ class DVDCollectionDaoFileImplTest {
 		
 	}
 
+	@SuppressWarnings("resource")
 	@BeforeEach
 	void setUp() throws Exception {
 		String testFile = "testfile.txt";

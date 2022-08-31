@@ -10,6 +10,11 @@ package dvdcollection.service;
 public class DVDDoesNotExistException extends Exception {
 
 	/**
+	 * added bc of serialization warning
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @param message
 	 */
 	public DVDDoesNotExistException(String message) {

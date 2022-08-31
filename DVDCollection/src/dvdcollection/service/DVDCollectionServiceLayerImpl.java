@@ -152,4 +152,9 @@ public class DVDCollectionServiceLayerImpl implements DVDCollectionServiceLayer 
 		audit.writeEntry("DVD " + title + " EDITED");
 	}
 
+	@Override
+	public List<String> getMpaaRatings() {
+		return MPAARATINGS;
+	}
+
 }
