@@ -120,10 +120,10 @@ public class DVDCollectionServiceLayerImpl implements DVDCollectionServiceLayer 
 	public DVD displayDVDInfo(String title) throws FilePersistenceException, DVDDoesNotExistException {
 		
 		if (dao.getDVD(title) != null) {
+			return dao.getDVD(title);
+		} else {
 			throw new DVDDoesNotExistException("ERROR: DVD does not exist.");
 		}
-		
-		return dao.getDVD(title);
 	}
 	
 	private void checkTitle(String title) throws InvalidDVDTitleException {

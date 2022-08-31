@@ -1,5 +1,7 @@
 package dvdcollection.dto;
 
+import java.util.Objects;
+
 public class DVD {
 	//fields
 	final String title;
@@ -56,5 +58,30 @@ public class DVD {
 	}
 	public String getUserReview() {
 		return userReview;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(directorName, mpaa, releaseDate, studio, title, userReview);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DVD other = (DVD) obj;
+		return Objects.equals(directorName, other.directorName) && Objects.equals(mpaa, other.mpaa)
+				&& Objects.equals(releaseDate, other.releaseDate) && Objects.equals(studio, other.studio)
+				&& Objects.equals(title, other.title) && Objects.equals(userReview, other.userReview);
+	}
+
+	@Override
+	public String toString() {
+		return "DVD [title=" + title + ", releaseDate=" + releaseDate + ", mpaa=" + mpaa + ", directorName="
+				+ directorName + ", studio=" + studio + ", userReview=" + userReview + "]";
 	}
 }

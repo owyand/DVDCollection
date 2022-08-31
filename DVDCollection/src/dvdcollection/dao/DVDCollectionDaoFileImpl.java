@@ -17,11 +17,15 @@ import dvdcollection.dto.DVD;
 public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 
 	final Map<String, DVD> DVDCollection = new HashMap<>();
-	public static final String COLLECTION = "collection.txt";
+	private final String collection;
 	public static final String DELIMITER = "::";
 
 	public DVDCollectionDaoFileImpl() {
-
+		collection = "collection.txt";
+	}
+	
+	public DVDCollectionDaoFileImpl(String testFile) {
+		collection = testFile;
 	}
 
 	@Override
@@ -117,7 +121,7 @@ public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 
 		try {
 			// FileReader can cause FileNotFoundException so wrapped in try catch
-			fromCollection = new Scanner(new BufferedReader(new FileReader(COLLECTION)));
+			fromCollection = new Scanner(new BufferedReader(new FileReader(collection)));
 
 			while (fromCollection.hasNextLine()) {
 				String DVDLine = fromCollection.nextLine();
@@ -159,7 +163,7 @@ public class DVDCollectionDaoFileImpl implements DVDCollectionDao {
 
 		// could throw an IOException because of FileWriter
 		try {
-			toFile = new PrintWriter(new FileWriter(COLLECTION));
+			toFile = new PrintWriter(new FileWriter(collection));
 			// create list of DVD Objects
 			List<DVD> DVDList = new ArrayList<>(DVDCollection.values());
 
